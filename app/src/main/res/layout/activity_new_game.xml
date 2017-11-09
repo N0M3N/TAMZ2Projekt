@@ -4,35 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/mainbackground"
-    tools:context="com.example.pkubi.tamzprojekt.MainActivity">
+    tools:context="com.example.pkubi.tamzprojekt.NewGame"
+    android:background="@drawable/mainbackground">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="187dp"
-        android:layout_height="216dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="GO 圍棋"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+        android:text="Choose board size"
         android:textColor="@color/HeaderPrimary"
-        android:textSize="80sp"
-        android:textStyle="bold|italic"
+        android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.071" />
+        app:layout_constraintVertical_bias="0.127" />
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/sizeSelection"
         android:layout_width="wrap_content"
-        android:layout_height="172dp"
-        android:layout_marginBottom="52dp"
+        android:layout_height="311dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -41,27 +36,54 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintVertical_bias="0.842">
 
-        <Button
-            android:id="@+id/newGameButton"
-            style="@android:style/Widget.Material.Light.Button.Borderless"
+        <RadioGroup
+            android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="New game"
-            android:textColor="@color/ButtonsColor"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.518"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.857" />
+            app:layout_constraintVertical_bias="0.151">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:text="9 x 9 - Ultra fast"
+                android:textColor="@color/ButtonsColor"
+                android:textSize="24sp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:text="13 x 13 - Faster"
+                android:textColor="@color/ButtonsColor"
+                android:textSize="24sp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:text="19 x 19 - Normal"
+                android:textColor="@color/ButtonsColor"
+                android:textSize="24sp" />
+
+        </RadioGroup>
 
         <Button
-            android:id="@+id/loadButton"
+            android:id="@+id/StartButton"
             style="@android:style/Widget.Material.Light.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,15 +91,17 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Load game"
+            android:layout_weight="1"
+            android:text="Start"
             android:textColor="@color/ButtonsColor"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.076" />
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+            app:layout_constraintVertical_bias="0.523" />
+
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
