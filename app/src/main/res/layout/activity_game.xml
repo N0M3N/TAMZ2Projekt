@@ -1,9 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.pkubi.tamzprojekt.Game">
+    tools:context="com.example.pkubi.tamzprojekt.Game"
+    android:background="@drawable/mainbackground">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_column="0"
+        android:layout_row="0"
+        android:id="@+id/ScoreBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <GridLayout
+            android:id="@+id/blackPlayerBoard"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginLeft="8dp">
+
+            <TextView
+                android:id="@+id/whitePlayerNameView"
+                android:layout_column="0"
+                android:layout_row="0"
+                android:layout_gravity="start"
+                android:textAlignment="gravity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/whitePlayerScoreView"
+                android:layout_column="0"
+                android:layout_row="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="24sp" />
+
+        </GridLayout>
+
+        <Button
+            android:id="@+id/SaveButton"
+            style="@android:style/Widget.Material.Light.Button.Borderless"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Save"
+            android:textSize="18sp" />
+
+        <GridLayout
+            android:id="@+id/whitePlayerBoard"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginRight="8dp">
+
+            <TextView
+                android:id="@+id/blackPlayerNameView"
+                android:layout_gravity="end"
+                android:textAlignment="gravity"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/blackPlayerScoreView"
+                android:layout_gravity="end"
+                android:textAlignment="gravity"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5.5"
+                android:textSize="24sp" />
+
+        </GridLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/BoardLayout"
+        android:layout_column="0"
+        android:layout_row="1"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/boardbgr">
+
+    </LinearLayout>
+
+</GridLayout>
