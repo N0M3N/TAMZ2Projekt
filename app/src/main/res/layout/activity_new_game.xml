@@ -66,6 +66,7 @@
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 
+
     <Button
         android:id="@+id/button"
         style="@android:style/Widget.Material.Light.Button.Borderless"
@@ -80,6 +81,47 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/blackplayernewgame" />
+
+    <RadioGroup
+        android:id="@+id/SizeGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@color/BackgroundDimmer"
+        android:padding="9dp"
+        app:layout_constraintBottom_toTopOf="@id/whiteplayernewgame"
+        app:layout_constraintEnd_toStartOf="@id/button"
+        app:layout_constraintHorizontal_bias="0.619"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blackplayernewgame">
+
+        <RadioButton
+            android:id="@+id/radioButton9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/ButtonsColor"
+            android:text="9x9"
+            android:textColor="@color/ButtonsColor" />
+
+        <RadioButton
+            android:id="@+id/radioButton13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/ButtonsColor"
+            android:text="13x13"
+            android:textColor="@color/ButtonsColor" />
+
+        <RadioButton
+            android:id="@+id/radioButton19"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:buttonTint="@color/ButtonsColor"
+            android:text="19x19"
+            android:textColor="@color/ButtonsColor" />
+    </RadioGroup>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/whiteplayernewgame"
@@ -139,20 +181,5 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView6" />
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
-
-    <Spinner
-        android:id="@+id/boardSizeSpinner"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/whiteplayernewgame"
-        app:layout_constraintEnd_toStartOf="@+id/button"
-        app:layout_constraintHorizontal_bias="0.614"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/blackplayernewgame"
-        app:layout_constraintVertical_bias="0.463" />
 
 </android.support.constraint.ConstraintLayout>

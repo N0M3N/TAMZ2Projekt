@@ -7,6 +7,8 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 public class NewGame extends Activity {
@@ -16,12 +18,11 @@ public class NewGame extends Activity {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_new_game);
-        Button button = findViewById(R.id.button);
-        String[] items = {"9x9", "13x13", "19x19"};
-        Spinner spinner = findViewById(R.id.boardSizeSpinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
-        spinner.setAdapter(adapter);
 
+        RadioGroup radioGroup = findViewById(R.id.SizeGroup);
+        radioGroup.check(R.id.radioButton19);
+
+        Button button = findViewById(R.id.button);
         button.setOnClickListener((v) -> {
             EditText whiteNameTE = findViewById(R.id.whitePlayerName);
             EditText blackNameTE = findViewById(R.id.blackPlayerName);
@@ -29,7 +30,9 @@ public class NewGame extends Activity {
             Bundle extras = new Bundle();
             extras.putString("whiteName", whiteNameTE.getText().toString());
             extras.putString("blackName", blackNameTE.getText().toString());
-            extras.putInt("size", spinner.getSelectedItemPosition()==0?9:spinner.getSelectedItemPosition()==1?13:19);
+            RadioButton selectedSize = findViewById(radioGroup.getCheckedRadioButtonId());
+            int size = selectedSize.getText().toString().endsWith("19")?19:selectedSize.getText().toString().endsWith("13")?13:9;
+            extras.putInt("size", size);
             extras.putString("load", null);
             intent.putExtras(extras);
             startActivity(intent);

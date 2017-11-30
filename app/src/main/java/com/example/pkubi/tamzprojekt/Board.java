@@ -1,6 +1,6 @@
 package com.example.pkubi.tamzprojekt;
 
-import android.view.View;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 
 /**
@@ -9,25 +9,35 @@ import android.widget.LinearLayout;
 
 public class Board {
 
-    public static int size;
+    private int size;
     private BoardCell BOARD[][];
 
-    public Board(int size, LinearLayout board, String load){
+    Board(int size, LinearLayout board, String load){
         // TODO: Read load?
 
         BOARD = new BoardCell[size][size];
         this.size = size;
+        int cellSize = board.getLayoutParams().width/(size+1);
 
+        GridLayout grid = new GridLayout(board.getContext());
+        if(size==9)
+            grid.setBackground(board.getResources().getDrawable(R.drawable.board6));
+        else if(size==13)
+            grid.setBackground(board.getResources().getDrawable(R.drawable.board13));
+        else
+            grid.setBackground(board.getResources().getDrawable(R.drawable.board19));
+
+        grid.setPadding(cellSize/2, cellSize/2, cellSize/2, cellSize/2);
+        grid.setColumnCount(size);
+        grid.setRowCount(size);
         for(int y = 0 ; y < size; y++){
-            LinearLayout row = new LinearLayout(board.getContext());
-            row.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
             for(int x = 0; x < size; x++){
-                BoardCell cell = new BoardCell(x, y, board.getWidth()/size, CellState.EMPTY, row.getContext());
+                BoardCell cell = new BoardCell(x, y, cellSize , CellState.EMPTY, board.getContext());
                 BOARD[x][y] = cell;
-                row.addView(cell, x);
+                grid.addView(cell, cellSize , cellSize);
             }
-            board.addView(row, y);
         }
+        board.addView(grid);
     }
 
     public Board(String loadData){
