@@ -1,52 +1,64 @@
 package com.example.pkubi.tamzprojekt;
 
 import android.content.Context;
-import android.util.TypedValue;
-import android.widget.Button;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 
 /**
  * Created by pkubi on 09-Nov-17.
  */
 
-public class BoardCell extends ImageView implements IBoardCell  {
+public class BoardCell extends ImageView {
 
-    //todo board
-    //private final Board board;
-    private int posX, posY;
+    private Drawable WhiteStone = getResources().getDrawable(R.drawable.whitestone);
+    private Drawable BlackStone = getResources().getDrawable(R.drawable.blackstone);
     private CellState state;
 
+    public final int posX, posY;
     public final int viewId;
+    public Boolean Checked = false;
 
-    public BoardCell(int posX, int posY, int sizePx, CellState state, Context context) {
+    public BoardCell(int posX, int posY, int sizePx, CellState state, Context context, Board board) {
         super(context);
         super.requestLayout();
-        float sizeDp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, sizePx, getResources().getDisplayMetrics());
-       // sizePx = (int) sizeDp;
         super.setMaxWidth(sizePx);
         super.setMinimumWidth(sizePx);
         super.setMaxHeight(sizePx);
         super.setMinimumHeight(sizePx);
         super.setPadding(0, 0, 0, 0);
 
-        // TODO: Uncomment background
-        // super.setBackground(new ColorDrawable(Color.TRANSPARENT));
         this.posX = posX;
         this.posY = posY;
         this.state = state;
         this.viewId = super.getId();
 
-        super.setOnClickListener(v -> {
-            if(Game.onTurn == CellState.BLACK)
-            {
-                this.setImageDrawable(getResources().getDrawable(R.drawable.blackstone));
-                this.state = CellState.BLACK;
-            }
-            else{
-                this.setImageDrawable(getResources().getDrawable(R.drawable.whitestone));
-                this.state = CellState.WHITE;
-            }
+        if(state == CellState.WHITE)
+            super.setImageDrawable(WhiteStone);
+        else if (state == CellState.BLACK)
+            super.setImageDrawable(BlackStone);
 
+        super.setOnClickListener(v -> {
+            if(this.state==CellState.EMPTY) { // can place stone to empty only
+                if (board.getPlayerOnTurn() == CellState.BLACK) {
+                    this.setImageDrawable(BlackStone);
+                    this.state = CellState.BLACK;
+                } else {
+                    this.setImageDrawable(WhiteStone);
+                    this.state = CellState.WHITE;
+                }
+                board.checkBoard(posX, posY);
+            }
         });
+    }
+
+    public void setEmpty(){
+        this.state = CellState.EMPTY;
+        this.setImageDrawable(null);
+    }
+
+    public CellState getState(){
+        return this.state;
     }
 }

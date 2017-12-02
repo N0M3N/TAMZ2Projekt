@@ -31,7 +31,13 @@ public class NewGame extends Activity {
             extras.putString("whiteName", whiteNameTE.getText().toString());
             extras.putString("blackName", blackNameTE.getText().toString());
             RadioButton selectedSize = findViewById(radioGroup.getCheckedRadioButtonId());
-            int size = selectedSize.getText().toString().endsWith("19")?19:selectedSize.getText().toString().endsWith("13")?13:9;
+
+            int size = selectedSize.getText().toString().endsWith("19")
+                    ? 19
+                    : selectedSize.getText().toString().endsWith("13")
+                    ? 13
+                    : 9;
+
             extras.putInt("size", size);
             extras.putString("load", null);
             intent.putExtras(extras);

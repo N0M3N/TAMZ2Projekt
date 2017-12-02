@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -11,7 +12,9 @@ public class Game extends Activity {
     private Board Board;
     private Player BlackPlayer;
     private Player WhitePlayer;
-    public static CellState onTurn;
+    private CellState onTurn;
+    private CellState notOnTurn;
+    private ImageView onTurnView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,21 +23,49 @@ public class Game extends Activity {
         setContentView(R.layout.activity_game);
 
         this.onTurn = CellState.BLACK;
+        this.notOnTurn = CellState.WHITE;
+        this.onTurnView = findViewById(R.id.playerOnTurn);
+
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         String load = extras.getString("load");
         int size = extras.getInt("size");
 
         // TODO: Load data
-        TextView blackplayerName = findViewById(R.id.blackPlayerNameView);
+        TextView blackPlayerName = findViewById(R.id.blackPlayerNameView);
         TextView whitePlayerName = findViewById(R.id.whitePlayerNameView);
+        TextView blackPlayerScore = findViewById(R.id.blackPlayerScoreView);
+        TextView whitePlayerScore = findViewById(R.id.whitePlayerScoreView);
+        Board = new Board(this, size, findViewById(R.id.BoardLayout), load);
+        BlackPlayer = new Player(extras.getString("blackName"), blackPlayerScore , false);
+        WhitePlayer = new Player(extras.getString("whiteName"), whitePlayerScore, true);
 
-        Board = new Board(size, findViewById(R.id.BoardLayout), load);
-        BlackPlayer = new Player(extras.getString("blackName"), false);
-        WhitePlayer = new Player(extras.getString("whiteName"), true);
-
-        blackplayerName.setText(BlackPlayer.getName());
+        blackPlayerName.setText(BlackPlayer.getName());
         whitePlayerName.setText(WhitePlayer.getName());
+    }
 
+    public CellState getPlayerOnTurn(){
+        return onTurn;
+    }
+
+    private void addPlayerScore(CellState player, double points){
+        if(player == CellState.BLACK)
+            BlackPlayer.addScore(points);
+        else
+            WhitePlayer.addScore(points);
+    }
+
+    private void nextPlayer() {
+        CellState tmp = notOnTurn;
+        notOnTurn = onTurn;
+        onTurn = tmp;
+
+        onTurnView.setImageDrawable(getDrawable(this.onTurn==CellState.WHITE?R.drawable.whitestone:R.drawable.blackstone));
+    }
+
+    public void endOfTurn(double score, double enemyScore) {
+        addPlayerScore(onTurn, score);
+        addPlayerScore(notOnTurn, enemyScore);
+        nextPlayer();
     }
 }
