@@ -139,4 +139,12 @@ public class Board {
             }
         }
     }
+
+    public int getSize() {
+        return size;
+    }
+
+    public BoardCell[][] getBoard() {
+        return BOARD;
+    }
 }

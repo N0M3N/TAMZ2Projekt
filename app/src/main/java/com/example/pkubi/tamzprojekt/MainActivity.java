@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         Button loadButton = findViewById(R.id.loadButton);
-        loadButton.setOnClickListener(v -> Toast.makeText(getApplicationContext(), "load button pressed", Toast.LENGTH_SHORT).show());
+        loadButton.setOnClickListener(v -> startActivity(new Intent(this.getApplicationContext(), LoadGame.class)));
 
         findViewById(R.id.newGameButton).setOnClickListener(v -> startActivity(new Intent(this.getApplicationContext(), NewGame.class)));
     }

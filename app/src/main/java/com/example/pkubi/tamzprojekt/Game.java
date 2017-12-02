@@ -1,12 +1,24 @@
 package com.example.pkubi.tamzprojekt;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Game extends Activity {
     private Board Board;
@@ -42,6 +54,35 @@ public class Game extends Activity {
 
         blackPlayerName.setText(BlackPlayer.getName());
         whitePlayerName.setText(WhitePlayer.getName());
+
+        Button saveButton = findViewById(R.id.SaveButton);
+        saveButton.setOnClickListener(v -> {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(Game.this);
+            dialog.setTitle("Save game");
+            dialog.setMessage("Write your save's name");
+            EditText input = new EditText(Game.this);
+            dialog.setView(input);
+            dialog.setPositiveButton("Save", (dialog1, which) -> {
+                Save save = new Save(
+                        whitePlayerName.getText().toString(),
+                        blackPlayerName.getText().toString(),
+                        Double.parseDouble(whitePlayerScore.getText().toString()),
+                        Double.parseDouble(blackPlayerScore.getText().toString()),
+                        this.Board.getSize(), this.Board.getBoard(),
+                        this.onTurn==CellState.WHITE);
+                File f = new File(getFilesDir() + File.separator + input.getText().toString() + ".xml");
+                f.getParentFile().mkdirs();
+                try {
+                    f.createNewFile();
+                    if(save.Serialize(f)){
+                        Toast.makeText(getApplicationContext(), "Game Saved", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            dialog.show();
+        });
     }
 
     public CellState getPlayerOnTurn(){
