@@ -1,44 +1,25 @@
 package com.example.pkubi.tamzprojekt;
 
-import org.xmlpull.v1.XmlSerializer;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import com.google.gson.Gson;
+
+import java.io.Console;
+import java.util.ArrayList;
 
 /**
  * Created by pkubi on 02-Dec-17.
  */
 
-class PlayerSave implements Serializable {
-    String Name;
-    double Score;
-
-    PlayerSave(String name, double score){
-        Name = name;
-        Score = score;
-    }
-}
-class CellSave implements Serializable {
-    int X;
-    int Y;
-    int State; // 0 = empty, 1 = white, 2 = black
-
-    CellSave(int x, int y, int state){
-        X = x;
-        Y = y;
-        State = state;
-    }
-}
-public class Save implements Serializable {
-    PlayerSave Players[] = new PlayerSave[2];
+public class Save {
+    String WhitePlayerName;
+    String BlackPlayerName;
+    double WhitePlayerScore;
+    double BlackPlayerScore;
     int Size;
-    CellSave Board[][];
+    int WhiteStones[][];
+    int BlackStones[][];
     boolean WhiteOnTurn;
 
     public Save(
@@ -50,51 +31,64 @@ public class Save implements Serializable {
             BoardCell[][] board,
             boolean whiteOnTurn)
     {
-        Players[0] = new PlayerSave(whiteName, whiteScore);
-        Players[1] = new PlayerSave(blackName, blackScore);
+        WhitePlayerName = whiteName;
+        BlackPlayerName = blackName;
+        WhitePlayerScore = whiteScore;
+        BlackPlayerScore = blackScore;
         Size = size;
-        Board = new CellSave[Size][Size];
         WhiteOnTurn = whiteOnTurn;
+
+        ArrayList<int[]> whiteStonesList = new ArrayList<>();
+        ArrayList<int[]> blackStonesList = new ArrayList<>();
+
         for(int y = 0; y < Size; y++){
             for(int x = 0; x < Size; x++){
-                Board[x][y] = new CellSave(board[x][y].posX, board[x][y].posY, board[x][y].getState()==CellState.EMPTY?0:board[x][y].getState()==CellState.WHITE?1:2);
+                if(board[x][y].getState()==CellState.WHITE){
+                    whiteStonesList.add(new int[]{x, y});
+                }
+                else if(board[x][y].getState()==CellState.BLACK){
+                    blackStonesList.add(new int[]{x, y});
+                }
             }
         }
-    }
-
-    public Save(File file){
-        try{
-            FileInputStream fileStream = new FileInputStream(file.getPath());
-            ObjectInputStream inputStream = new ObjectInputStream(fileStream);
-            Save save = (Save) inputStream.readObject();
-            inputStream.close();
-            fileStream.close();
-            this.WhiteOnTurn = save.WhiteOnTurn;
-            this.Board = save.Board;
-            this.Players = save.Players;
-            this.Size = save.Size;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        WhiteStones = new int[whiteStonesList.size()][2];
+        for(int i = 0; i< whiteStonesList.size(); i++){
+            WhiteStones[i] = whiteStonesList.get(i);
+        }
+        BlackStones = new int[blackStonesList.size()][2];
+        for(int i = 0; i < blackStonesList.size(); i++){
+            BlackStones[i] = blackStonesList.get(i);
         }
     }
 
-    public Boolean Serialize(File file){
-        try{
-            FileOutputStream fileStream = new FileOutputStream(file.getPath(), false);
-            ObjectOutputStream outputStream = new ObjectOutputStream(fileStream);
-            outputStream.writeObject(this);
-            outputStream.close();
-            fileStream.close();
-            return true;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
+    public Save(String data){
+        FromJson(data);
+    }
+
+    private void FromJson(String data){
+        Gson gson = new Gson();
+        Save save = gson.fromJson(data, this.getClass());
+        this.BlackPlayerScore = save.BlackPlayerScore;
+        this.WhitePlayerScore = save.WhitePlayerScore;
+        this.BlackPlayerName = save.BlackPlayerName;
+        this.WhitePlayerName = save.WhitePlayerName;
+        this.WhiteStones = save.WhiteStones;
+        this.BlackStones = save.BlackStones;
+        this.WhiteOnTurn = save.WhiteOnTurn;
+        this.Size = save.Size;
+    }
+
+    private String ToJson(){
+        Gson gson = new Gson();
+        return gson.toJson(this).toString();
+    }
+
+    private boolean SaveToDB(Context context, String name){
+        DBHelper dbHelper = new DBHelper(context);
+        return dbHelper.PutSave(name, this.ToJson());
+    }
+
+    public boolean Save(Context applicationContext, String saveName) {
+        return this.SaveToDB(applicationContext, saveName);
     }
 }

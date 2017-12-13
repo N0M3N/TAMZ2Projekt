@@ -1,11 +1,14 @@
 package com.example.pkubi.tamzprojekt;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,33 +21,19 @@ public class LoadGame extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_load_game);
 
-        LinearLayout listOfSaves = findViewById(R.id.listOfSaves);
-        File folder = new File(getFilesDir() + "/saves");
-        File[] files = folder.listFiles((dir, name) -> {
-            if(name.endsWith(".xml"))
-                return true;
-            else return false;
-        });
-        if(files == null) {
-            TextView empty = new TextView(getApplicationContext());
-            empty.setText("No files to load game from.");
-            listOfSaves.addView(empty);
-        }
-        else {
-            for (File file : files) {
-                TextView line = new TextView(getApplicationContext());
-                line.setText(file.getName());
-                line.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
+        ListView listOfSaves = findViewById(R.id.listOfSaves);
+        String[] array = (String[]) getLoads();
 
-                        return true;
-                    }
-                });
-                listOfSaves.addView(line);
-            }
-        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.activity_load_game, array);
+        listOfSaves.setAdapter(adapter);
+    }
+
+    private String[] getLoads(){
+        DBHelper dbHelper = new DBHelper(getApplicationContext());
+        return dbHelper.GetSaves();
     }
 }

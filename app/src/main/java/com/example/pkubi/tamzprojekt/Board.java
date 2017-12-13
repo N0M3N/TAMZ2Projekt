@@ -1,6 +1,5 @@
 package com.example.pkubi.tamzprojekt;
 
-import android.util.Log;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 
@@ -9,14 +8,15 @@ import android.widget.LinearLayout;
  */
 
 public class Board {
+    private static final int TOP = 0, RIGHT = 1, BOTTOM = 2, LEFT = 3;
 
-    static final double EMPTY = -2;
-    static final double ENEMY = -1;
-    static final int TOP = 0, RIGHT = 1, BOTTOM = 2, LEFT = 3;
-
-    private int size;
+    private final int size;
     private Game game;
     private BoardCell BOARD[][];
+
+    CellState getPlayerOnTurn(){
+        return game.getPlayerOnTurn();
+    }
 
     Board(Game game, int size, LinearLayout board, String load){
         // TODO: Read load?
@@ -46,16 +46,12 @@ public class Board {
         board.addView(grid);
     }
 
-    public Board(String loadData){
+    public Board(Save savedGame, int size){
+        this.size = size;
         // TODO: load data
-        InitGame(loadData);
     }
 
-    private void InitGame(String loadData) {
-        // Todo: load data
-    }
-
-    private boolean hasEmpty(BoardCell cell, CellState enemy){
+    private boolean hasLiberty(BoardCell cell, CellState enemy){
         if(cell == null) // end of board
             return false;
         if(cell.getState()==enemy || cell.Checked){ // enemy cell or checked
@@ -72,7 +68,7 @@ public class Board {
         BoardCell Bottom = (cell.posY+1 < size) ? BOARD[cell.posX][cell.posY+1] : null;
         BoardCell Left = (cell.posX-1 >= 0) ? BOARD[cell.posX-1][cell.posY] : null;
 
-        return hasEmpty(Top, enemy) || hasEmpty(Right, enemy) || hasEmpty(Bottom, enemy) || hasEmpty(Left, enemy);
+        return hasLiberty(Top, enemy) || hasLiberty(Right, enemy) || hasLiberty(Bottom, enemy) || hasLiberty(Left, enemy);
     }
 
     public void checkBoard(int x, int y){
@@ -85,13 +81,13 @@ public class Board {
 
         for(int i = 0; i < 4; i++){ // check stones from all sides
             if(Neighbours[i]!=null && Neighbours[i].getState()==enemy) { // if neighbour is enemy
-                if(!hasEmpty(Neighbours[i], cell.getState())){ // and doesn't have empty space
+                if(!hasLiberty(Neighbours[i], cell.getState())){ // and doesn't have empty space
                     score += removeStones(Neighbours[i], enemy); // remove all his stones and give me points
                 }
             }
         }
 
-        if(!hasEmpty(cell, enemy)){ // recently placed stone does not have a free space around self or ally
+        if(!hasLiberty(cell, enemy)){ // recently placed stone does not have a free space around self or ally
             enemyScore = removeStones(cell, cell.getState());
         }
 
@@ -99,6 +95,11 @@ public class Board {
         cleanBoard();
     }
 
+    /**
+     * @param cell of which neighbouting stones should be removed
+     * @param state color of stones which are being removed
+     * @return number of stones which were removed
+     */
     private double removeStones(BoardCell cell, CellState state) {
         BoardCell Neighbours[] = getNeighbours(cell);
         double score = 1; // 1 point for cell
@@ -128,9 +129,6 @@ public class Board {
         return ret;
     }
 
-    CellState getPlayerOnTurn(){
-        return game.getPlayerOnTurn();
-    }
 
     private void cleanBoard(){
         for(int y = 0; y < size; y++){
@@ -140,11 +138,11 @@ public class Board {
         }
     }
 
-    public int getSize() {
+    int getSize() {
         return size;
     }
 
-    public BoardCell[][] getBoard() {
+    BoardCell[][] getBoard() {
         return BOARD;
     }
 }

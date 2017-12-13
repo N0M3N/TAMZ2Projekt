@@ -68,18 +68,13 @@ public class Game extends Activity {
                         blackPlayerName.getText().toString(),
                         Double.parseDouble(whitePlayerScore.getText().toString()),
                         Double.parseDouble(blackPlayerScore.getText().toString()),
-                        this.Board.getSize(), this.Board.getBoard(),
-                        this.onTurn==CellState.WHITE);
-                File f = new File(getFilesDir() + File.separator + input.getText().toString() + ".xml");
-                f.getParentFile().mkdirs();
-                try {
-                    f.createNewFile();
-                    if(save.Serialize(f)){
-                        Toast.makeText(getApplicationContext(), "Game Saved", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                        this.Board.getSize(),
+                        this.Board.getBoard(),
+                        this.onTurn == CellState.WHITE);
+                if (save.Save(getApplicationContext(), input.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "Game Saved", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getApplicationContext(), "Save Failed", Toast.LENGTH_SHORT).show();
             });
             dialog.show();
         });
