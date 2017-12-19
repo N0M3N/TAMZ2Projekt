@@ -2,23 +2,14 @@ package com.example.pkubi.tamzprojekt;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.File;
-import java.io.IOException;
 
 public class Game extends Activity {
     private Board Board;
@@ -40,20 +31,38 @@ public class Game extends Activity {
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        String load = extras.getString("load");
-        int size = extras.getInt("size");
-
-        // TODO: Load data
+        int size;
         TextView blackPlayerName = findViewById(R.id.blackPlayerNameView);
         TextView whitePlayerName = findViewById(R.id.whitePlayerNameView);
         TextView blackPlayerScore = findViewById(R.id.blackPlayerScoreView);
         TextView whitePlayerScore = findViewById(R.id.whitePlayerScoreView);
-        Board = new Board(this, size, findViewById(R.id.BoardLayout), load);
-        BlackPlayer = new Player(extras.getString("blackName"), blackPlayerScore , false);
-        WhitePlayer = new Player(extras.getString("whiteName"), whitePlayerScore, true);
 
-        blackPlayerName.setText(BlackPlayer.getName());
-        whitePlayerName.setText(WhitePlayer.getName());
+        int load = extras.getInt("saveID");
+
+        if(load != 0){
+            DBHelper db = new DBHelper(getApplicationContext());
+            String data = db.getData(load);
+
+            Save save = new Save(data);
+            size = save.Size;
+            onTurn = save.WhiteOnTurn?CellState.WHITE:CellState.BLACK;
+            notOnTurn = save.WhiteOnTurn?CellState.BLACK:CellState.WHITE;
+            BlackPlayer = new Player(save.BlackPlayerName, blackPlayerScore, false);
+            WhitePlayer = new Player(save.WhitePlayerName, whitePlayerScore, true);
+            BlackPlayer.addScore(save.BlackPlayerScore);
+            WhitePlayer.addScore(save.WhitePlayerScore - 7.5);
+            Board = new Board(this, size, findViewById(R.id.BoardLayout), save.BlackStones, save.WhiteStones);
+        }
+        else {
+            size = extras.getInt("size");
+            BlackPlayer = new Player(extras.getString("blackName"), blackPlayerScore, false);
+            WhitePlayer = new Player(extras.getString("whiteName"), whitePlayerScore, true);
+            Board = new Board(this, size, findViewById(R.id.BoardLayout), null, null);
+        }
+
+
+            blackPlayerName.setText(BlackPlayer.getName());
+            whitePlayerName.setText(WhitePlayer.getName());
 
         Button saveButton = findViewById(R.id.SaveButton);
         saveButton.setOnClickListener(v -> {

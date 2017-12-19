@@ -18,7 +18,7 @@ public class Board {
         return game.getPlayerOnTurn();
     }
 
-    Board(Game game, int size, LinearLayout board, String load){
+    Board(Game game, int size, LinearLayout board, int[][] BlackPlayerStones, int[][] WhitePlayerStones){
         // TODO: Read load?
         this.game = game;
         BOARD = new BoardCell[size][size];
@@ -44,11 +44,15 @@ public class Board {
             }
         }
         board.addView(grid);
-    }
 
-    public Board(Save savedGame, int size){
-        this.size = size;
-        // TODO: load data
+        if(BlackPlayerStones!=null)
+        for(int i = 0; i < BlackPlayerStones.length; i++){
+            BOARD[BlackPlayerStones[i][0]][BlackPlayerStones[i][1]].setStone(CellState.BLACK);
+        }
+        if(WhitePlayerStones!=null)
+        for(int i = 0; i < WhitePlayerStones.length; i++){
+            BOARD[WhitePlayerStones[i][0]][WhitePlayerStones[i][1]].setStone(CellState.WHITE);
+        }
     }
 
     private boolean hasLiberty(BoardCell cell, CellState enemy){

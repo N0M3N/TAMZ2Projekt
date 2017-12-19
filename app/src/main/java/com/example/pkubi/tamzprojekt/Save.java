@@ -85,7 +85,7 @@ public class Save {
 
     private boolean SaveToDB(Context context, String name){
         DBHelper dbHelper = new DBHelper(context);
-        return dbHelper.PutSave(name, this.ToJson());
+        return dbHelper.insertSave(name, this.ToJson());
     }
 
     public boolean Save(Context applicationContext, String saveName) {

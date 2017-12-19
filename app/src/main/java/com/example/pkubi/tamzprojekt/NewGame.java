@@ -39,7 +39,7 @@ public class NewGame extends Activity {
                     : 9;
 
             extras.putInt("size", size);
-            extras.putString("load", null);
+            extras.putInt("saveID", 0);
             intent.putExtras(extras);
             startActivity(intent);
         });

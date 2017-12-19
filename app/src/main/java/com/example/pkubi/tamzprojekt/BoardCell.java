@@ -1,9 +1,7 @@
 package com.example.pkubi.tamzprojekt;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.widget.ImageView;
 
 /**
@@ -41,16 +39,19 @@ public class BoardCell extends ImageView {
 
         super.setOnClickListener(v -> {
             if(this.state==CellState.EMPTY) { // can place stone to empty only
-                if (board.getPlayerOnTurn() == CellState.BLACK) {
-                    this.setImageDrawable(BlackStone);
-                    this.state = CellState.BLACK;
-                } else {
-                    this.setImageDrawable(WhiteStone);
-                    this.state = CellState.WHITE;
-                }
+                setStone(board.getPlayerOnTurn());
                 board.checkBoard(posX, posY);
             }
         });
+    }
+    public void setStone(CellState state){
+        if (state == CellState.BLACK) {
+            this.setImageDrawable(BlackStone);
+            this.state = CellState.BLACK;
+        } else {
+            this.setImageDrawable(WhiteStone);
+            this.state = CellState.WHITE;
+        }
     }
 
     public void setEmpty(){
